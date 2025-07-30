@@ -1,78 +1,98 @@
-
----
-
 ## 🔍 Problem Statement
-
-Predict whether a person is an **Extrovert** or **Introvert** based on:
-- Time spent alone
-- Stage fear
-- Attendance at social events
-- Going outside frequency
-- Post frequency
-- Friends circle size
-- Responses to social fatigue
-
----
+problem:
+  objective: Predict whether a person is an Extrovert or Introvert
+  based_on:
+    - Time spent alone
+    - Stage fear
+    - Attendance at social events
+    - Going outside frequency
+    - Post frequency
+    - Friends circle size
+    - Responses to social fatigue
 
 ## 🧼 Data Preprocessing
+data_preprocessing:
+  imputation:
+    numerical_columns: mean
+    categorical_columns: mode
 
-1. **Imputation**
-   - Numerical columns: imputed using mean
-   - Categorical columns: imputed using mode
+  encoding:
+    binary_features_encoded:
+      - Stage_fear
+      - Drained_after_socializing
+    target_encoding:
+      variable: Personality
+      method: label encoding
+      mapping:
+        Extrovert: 0
+        Introvert: 1
 
-2. **Encoding**
-   - Binary categorical features (`Stage_fear`, `Drained_after_socializing`) were one-hot encoded
-   - Target variable `Personality` was label-encoded (Extrovert=0, Introvert=1)
-
-3. **Feature Scaling**
-   - Applied `MinMaxScaler` on social activity-related numeric columns
-
----
+  scaling:
+    method: MinMaxScaler
+    applied_to: social activity-related numeric columns
 
 ## 🧪 Feature Engineering
-
-Derived meaningful features:
-- `social_energy_score`: composite metric capturing social activity
-- `introversion_ratio`: time alone relative to friends circle size
-- `active_socializer`: boolean flag based on thresholds
-- `low_energy_flag`: derived from "Drained after socializing" & "Stage fear"
-
----
+feature_engineering:
+  derived_features:
+    - name: social_energy_score
+      description: Composite metric capturing social activity
+    - name: introversion_ratio
+      description: Ratio of time spent alone to size of friends circle
+    - name: active_socializer
+      description: Boolean flag based on thresholds
+    - name: low_energy_flag
+      description: Derived from drained social energy and stage fear
 
 ## 📈 Model Training & Evaluation
+model_evaluation:
+  models_tested:
+    - model: Logistic Regression
+      accuracy: 97%
+      f1_macro: 96%
+    - model: Random Forest
+      accuracy: 97%
+      f1_macro: 96%
+    - model: Gradient Boosting
+      accuracy: 97%
+      f1_macro: 96%
+    - model: XGBoost (Tuned)
+      accuracy: 97%
+      f1_macro: 96%
+      selected: true
 
-Evaluated multiple classifiers:
-
-| Model                  | Accuracy | F1 Score (Macro) |
-|------------------------|----------|------------------|
-| Logistic Regression    | 97%      | 96%              |
-| Random Forest          | 97%      | 96%              |
-| Gradient Boosting      | 97%      | 96%              |
-| ✅ XGBoost (Tuned)     | 97%      | 96%              |
-
-- Final model: **XGBoostClassifier** with `GridSearchCV` hyperparameter tuning.
-- Evaluation metric: **F1 Score (macro)** due to class imbalance.
-
----
+  final_model:
+    name: XGBoostClassifier
+    tuning: GridSearchCV
+    evaluation_metric: F1 Score (macro)
 
 ## 🚀 Submission Pipeline
+submission_pipeline:
+  steps:
+    - Apply same preprocessing to test data
+    - Generate predictions
+    - Inverse transform target encoding
+    - Export to submission.csv
 
-- Test data underwent the **same preprocessing pipeline**
-- Final predictions were inverse-transformed and stored in `submission.csv`:
-
-```bash
-id,Personality
-1001,Extrovert
-1002,Introvert
-...
+  sample_submission:
+    format: id,Personality
+    examples:
+      - 1001,Extrovert
+      - 1002,Introvert
 
 ## 📁 Files
+files:
+  - name: Notebook
+    description: Kaggle notebook containing full pipeline and modeling
+    path: https://www.kaggle.com/code/shivangi2k18/predict-the-introverts-from-extroverts
 
-- `predict-the-introverts-from-extroverts.ipynb` → https://www.kaggle.com/code/shivangi2k18/predict-the-introverts-from-extroverts
-- `data/` → https://www.kaggle.com/competitions/playground-series-s5e7/data
-- `submission.csv` → https://www.kaggle.com/code/shivangi2k18/predict-the-introverts-from-extroverts/output
+  - name: Data
+    description: Dataset provided for the competition
+    path: https://www.kaggle.com/competitions/playground-series-s5e7/data
 
----
+  - name: Submission
+    description: Final model predictions submitted to Kaggle
+    path: https://www.kaggle.com/code/shivangi2k18/predict-the-introverts-from-extroverts/output
+
 
 ## 📬 Contact
 
