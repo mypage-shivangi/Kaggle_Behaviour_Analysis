@@ -1,99 +1,114 @@
-## 🔍 Problem Statement
-problem:
-  objective: Predict whether a person is an Extrovert or Introvert
-  based_on:
-    - Time spent alone
-    - Stage fear
-    - Attendance at social events
-    - Going outside frequency
-    - Post frequency
-    - Friends circle size
-    - Responses to social fatigue
+## 🧠 Introvert vs. Extrovert Personality Prediction – Binary Classification
+
+This notebook builds a machine learning model to classify individuals as **Introvert** or **Extrovert** based on their behavioral and social activity features.
+
+We'll explore:
+
+- Data cleaning and preprocessing  
+- Feature engineering  
+- Model training and evaluation  
+
+---
+
+## ✅ Model Benchmarking Summary
+
+We evaluated multiple classifiers using consistent preprocessing and stratified train-test validation. Here's the performance summary:
+
+| Model                   | Accuracy | F1 Score (Macro) | Notes                                                                 |
+|-------------------------|----------|------------------|-----------------------------------------------------------------------|
+| **Logistic Regression** | **97%**  | **96%**          | Captured linear separation well. Simple yet effective.               |
+| **Random Forest**       | 97%      | 96%              | Handled non-linear interactions. Slight overfitting observed.        |
+| **Gradient Boosting**   | 97%      | 96%              | Performed consistently across folds.                                 |
+| ✅ **XGBoost (Tuned)**   | 97%      | 96%              | Final model after `GridSearchCV` tuning. Robust and generalizable.   |
+
+---
+
+## 📌 Problem Statement
+
+**Goal:** Predict whether a person is an **Extrovert** or **Introvert** using social interaction behavior and lifestyle patterns.
+
+**Target Variable:**  
+- `Personality`: 0 → Extrovert, 1 → Introvert
+
+**Dataset Source:** [Kaggle - Playground Series S5E7](https://www.kaggle.com/competitions/playground-series-s5e7/data)
+
+---
 
 ## 🧼 Data Preprocessing
-data_preprocessing:
-  imputation:
-    numerical_columns: mean
-    categorical_columns: mode
 
-  encoding:
-    binary_features_encoded:
-      - Stage_fear
-      - Drained_after_socializing
-    target_encoding:
-      variable: Personality
-      method: label encoding
-      mapping:
-        Extrovert: 0
-        Introvert: 1
+- **Imputation**:
+  - Numerical: Filled with mean
+  - Categorical: Filled with mode
 
-  scaling:
-    method: MinMaxScaler
-    applied_to: social activity-related numeric columns
+- **Encoding**:
+  - Binary categorical features (`Stage_fear`, `Drained_after_socializing`) → One-Hot Encoding
+  - Target (`Personality`) → Label Encoding (Extrovert = 0, Introvert = 1)
+
+- **Scaling**:
+  - Applied `MinMaxScaler` to social activity-related numeric columns
+
+---
 
 ## 🧪 Feature Engineering
-feature_engineering:
-  derived_features:
-    - name: social_energy_score
-      description: Composite metric capturing social activity
-    - name: introversion_ratio
-      description: Ratio of time spent alone to size of friends circle
-    - name: active_socializer
-      description: Boolean flag based on thresholds
-    - name: low_energy_flag
-      description: Derived from drained social energy and stage fear
 
-## 📈 Model Training & Evaluation
-model_evaluation:
-  models_tested:
-    - model: Logistic Regression
-      accuracy: 97%
-      f1_macro: 96%
-    - model: Random Forest
-      accuracy: 97%
-      f1_macro: 96%
-    - model: Gradient Boosting
-      accuracy: 97%
-      f1_macro: 96%
-    - model: XGBoost (Tuned)
-      accuracy: 97%
-      f1_macro: 96%
-      selected: true
+Created additional meaningful features to enhance predictive signal:
 
-  final_model:
-    name: XGBoostClassifier
-    tuning: GridSearchCV
-    evaluation_metric: F1 Score (macro)
+- `social_energy_score`: A composite metric aggregating overall social activity
+- `introversion_ratio`: Time spent alone vs. number of close friends
+- `active_socializer`: Boolean flag based on high activity thresholds
+- `low_energy_flag`: Derived from responses to social fatigue & stage fear
 
-## 🚀 Submission Pipeline
-submission_pipeline:
-  steps:
-    - Apply same preprocessing to test data
-    - Generate predictions
-    - Inverse transform target encoding
-    - Export to submission.csv
+---
 
-  sample_submission:
-    format: id,Personality
-    examples:
-      - 1001,Extrovert
-      - 1002,Introvert
+## 📈 Modeling Strategy
+
+- Models used:
+  - Logistic Regression
+  - Random Forest
+  - Gradient Boosting
+  - ✅ XGBoost with GridSearchCV (Best model)
+
+- Evaluation Metrics:
+  - Accuracy
+  - F1 Score (Macro) — used due to slight class imbalance
+  - Cross-validation for robustness
+
+---
+
+## 🏁 Final Results
+
+- **Best Model:** ✅ **XGBoost Classifier (tuned)**
+- **Accuracy:** 97%
+- **F1 Score:** 96% (Macro)
+- Demonstrated strong performance across metrics with consistent results
+
+---
+
+## 📌 Key Takeaways
+
+- Social interaction features are highly predictive of personality types.
+- Custom features like `introversion_ratio` improved model separation.
+- Simple preprocessing and thoughtful feature engineering can yield strong performance.
+
+---
+
+## 🚀 Future Work
+
+- Add SHAP-based interpretability visualizations
+- Build a web-based personality prediction interface using Streamlit
+- Explore time-based data or interaction logs if available
+
+---
 
 ## 📁 Files
-files:
-  - name: Notebook
-    description: Kaggle notebook containing full pipeline and modeling
-    path: https://www.kaggle.com/code/shivangi2k18/predict-the-introverts-from-extroverts
 
-  - name: Data
-    description: Dataset provided for the competition
-    path: https://www.kaggle.com/competitions/playground-series-s5e7/data
+- [`predict-the-introverts-from-extroverts.ipynb`](https://www.kaggle.com/code/shivangi2k18/predict-the-introverts-from-extroverts) – Main notebook  
+- [`data/`](https://www.kaggle.com/competitions/playground-series-s5e7/data) – Competition dataset  
+- [`submission.csv`](https://www.kaggle.com/code/shivangi2k18/predict-the-introverts-from-extroverts/output) – Final model predictions
 
-  - name: Submission
-    description: Final model predictions submitted to Kaggle
-    path: https://www.kaggle.com/code/shivangi2k18/predict-the-introverts-from-extroverts/output
-
+---
 
 ## 📬 Contact
 
-Interested in collaborating or discussing the project? Connect with me on LinkedIn - https://www.linkedin.com/in/shivangigupta01
+Interested in collaborating or discussing the project?  
+Connect with me on [LinkedIn](https://www.linkedin.com/in/shivangigupta01)
